@@ -1,0 +1,30 @@
+0.  Prompt
+
+
+1.  Création du projet sur GitHub : jstat
+création d'un repository public
+ignore : node
+licence : MIT
+
+
+2.  Liaison avec GitHub
+    2.1.    clone du projet sur un dossier local : git clone git@github.com:Khepten/jstat-app.git
+    2.2.    Initialisez un dépôt Git : git init
+    2.3.    Ajoutez tous les fichiers existants à Git :
+
+
+
+3.  installation de React dans un dossier Frontend
+npx create-react-app frontend --template typescript --use-npm
+par défaut, la version 19 est installée et n'est pas encore compatible avec toutes les librairies
+    3.1.    Désinstallation (dans le dossier frontend): 
+            npm uninstall react react-dom
+    3.2.    Réinstallation de la version 18.2.0 (https://fr.legacy.reactjs.org/versions/)
+            npm install react@18.2.0 react-dom@18.2.0
+            npm install
+    3.3     Renommage du fichier App.tsx en App.jsx + nettoyage des fichiers dans les fichiers public et src
+    3.4.    Démarrage de React : npm start
+
+
+4.  Lier le dossier local à GitHub
+    git remote add origin git@github.com:Khepten/jstat-app.git
