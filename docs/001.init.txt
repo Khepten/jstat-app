@@ -10,7 +10,8 @@ licence : MIT
 2.  Liaison avec GitHub
     2.1.    clone du projet sur un dossier local : git clone git@github.com:Khepten/jstat-app.git
     2.2.    Initialisez un dépôt Git : git init
-    2.3.    Ajoutez tous les fichiers existants à Git :
+    2.3.    Ajoutez tous les fichiers existants à Git : git add .
+
 
 
 
