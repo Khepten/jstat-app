@@ -13,8 +13,6 @@ licence : MIT
     2.3.    Ajoutez tous les fichiers existants à Git : git add .
 
 
-
-
 3.  installation de React dans un dossier Frontend
 npx create-react-app frontend --template typescript --use-npm
 par défaut, la version 19 est installée et n'est pas encore compatible avec toutes les librairies
