@@ -27,3 +27,10 @@ par défaut, la version 19 est installée et n'est pas encore compatible avec to
 
 4.  Lier le dossier local à GitHub
     git remote add origin git@github.com:Khepten/jstat-app.git
+
+
+5.  Création de la table tickets (fichier CREATE TABLE tickets.pgsql)
+
+
+6.  Installation de pg et d'axios
+    création du dossier backend puis : npm install pg axios
