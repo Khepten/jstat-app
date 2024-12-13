@@ -1,19 +1,21 @@
 const axios = require("axios");
 const { Client } = require("pg");
+require("dotenv").config();
 
-// Configuration Jira
-const JIRA_URL = "https://jira-srh.cegedim-srh.net/rest/api/2/search";
-const USERNAME = "votre_username";
-const PASSWORD = "votre_password";
-const FILTER_ID = "169262";
+// Configuration Jira (via .env)
+const JIRA_URL = process.env.JIRA_URL;
+const USERNAME = process.env.JIRA_USERNAME;
+const PASSWORD = process.env.JIRA_PASSWORD;
+const FILTER_ID = process.env.JIRA_FILTER_ID;
+const API_TOKEN = process.env.JIRA_TOKEN;
 
-// Configuration PostgreSQL
+// Configuration PostgreSQL (via .env)
 const dbConfig = {
-    user: "votre_utilisateur",
-    host: "localhost",
-    database: "votre_base",
-    password: "votre_mot_de_passe",
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: parseInt(process.env.DB_PORT, 10),
 };
 
 // Table de correspondance entre Jira et PostgreSQL
@@ -59,30 +61,33 @@ const FIELD_MAPPING = {
     customfield_15770: "mrgl_impact",
 };
 
-// Récupération des tickets Jira
-async function fetchJiraData() {
+// Récupération des données Jira pour une issue spécifique (hardcodée)
+async function fetchJiraTicket() {
     const auth = Buffer.from(`${USERNAME}:${PASSWORD}`).toString("base64");
+    const url =
+        "https://jira-srh.cegedim-srh.net/rest/api/2/issue/SRHCACALF-7235";
 
     try {
-        const response = await axios.get(JIRA_URL, {
+        console.log("Tentative de récupération du ticket...");
+        const response = await axios.get(url, {
             headers: {
                 Authorization: `Basic ${auth}`,
                 Accept: "application/json",
             },
-            params: {
-                jql: `filter=${FILTER_ID}`,
-                maxResults: 100,
-            },
         });
-        return response.data.issues;
+
+        console.log("Ticket récupéré :", response.data);
+        return response.data;
     } catch (error) {
-        console.error(
-            "Erreur lors de la récupération des données Jira :",
-            error.message
-        );
-        throw error;
+        console.log("JIRA_URL:", url);
+        console.log("fetchJiraData:", typeof fetchJiraData);
+        console.log("USERNAME:", process.env.JIRA_USERNAME);
+        console.log("PASSWORD:", process.env.JIRA_PASSWORD);
+        console.error("Détails supplémentaires :", error.response?.data);
     }
 }
+
+fetchJiraTicket();
 
 // Insertion des données dans PostgreSQL
 async function insertIntoDatabase(issues) {
@@ -107,7 +112,7 @@ async function insertIntoDatabase(issues) {
                 .map((_, index) => `$${index + 1}`)
                 .join(", ");
 
-            const query = `INSERT INTO votre_table (${columns}) VALUES (${placeholders})`;
+            const query = `INSERT INTO issues (${columns}) VALUES (${placeholders})`;
 
             // Exécuter la requête
             await client.query(query, values);
@@ -128,8 +133,9 @@ async function insertIntoDatabase(issues) {
 // Fonction principale
 async function main() {
     try {
-        const issues = await fetchJiraData();
-        await insertIntoDatabase(issues);
+        const issues = await fetchJiraData(); // Récupérer une issue Jira
+        console.log("fetchJiraData:", typeof fetchJiraData);
+        //await insertIntoDatabase(issues); // Insérer les données dans PostgreSQL
     } catch (error) {
         console.error("Erreur :", error.message);
     }

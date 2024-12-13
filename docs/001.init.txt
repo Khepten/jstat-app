@@ -32,5 +32,17 @@ par défaut, la version 19 est installée et n'est pas encore compatible avec to
 5.  Création de la table tickets (fichier CREATE TABLE tickets.pgsql)
 
 
-6.  Installation de pg et d'axios
-    création du dossier backend puis : npm install pg axios
+6.  Installation de pg et d'axios et dotenv
+    création du dossier backend puis : npm install pg axios dotenv
+
+7.  pour récupérer une liste de clés jiras depuis un filtre via l'API : 
+    https://jira-srh.cegedim-srh.net/rest/api/2/search?fields=key&jql=filter=172347&maxResults=999
+
+    pour récupérer une jira à partir d'une clé 
+    https://jira-srh.cegedim-srh.net/rest/api/2/search?jql=key=SRHCACALF-7235
+
+    pour récupérer les commentaires de la jira à partir d'une clé 
+    https://jira-srh.cegedim-srh.net/rest/api/2/issue/SRHCACALF-7134/comment
+
+
+

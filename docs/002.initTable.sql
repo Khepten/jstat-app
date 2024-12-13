@@ -1,4 +1,4 @@
-CREATE TABLE tickets (
+CREATE TABLE issues (
 id_serial INT PRIMARY KEY,
 id_jira VARCHAR(50) UNIQUE NOT NULL,
 due_delivery DATE,

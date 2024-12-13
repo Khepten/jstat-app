@@ -1,32 +1,49 @@
+require("dotenv").config(); // Charger les variables d'environnement
 const axios = require("axios");
 
-// Fonction pour récupérer les clés Jira
-const fetchJiraKeys = async () => {
+// Charger les variables d'environnement
+const jiraBaseUrl = process.env.JIRA_BASE_URL;
+const jiraUsername = process.env.JIRA_USERNAME;
+const jiraPassword = process.env.JIRA_PASSWORD;
+
+// Générer le token d'authentification en Base64 avec Buffer
+const authToken = `Basic ${Buffer.from(
+    `${jiraUsername}:${jiraPassword}`
+).toString("base64")}`;
+
+// Fonction pour récupérer les clés des tickets Jira
+async function getJiraKeys() {
     try {
-        // Requête à l'API Jira
-        const base64Auth = Buffer.from("ndegas:Ormelune45@").toString("base64");
-        const authHeader = `Basic ${base64Auth}`;
         const response = await axios.get(
-            "https://jira-srh.cegedim-srh.net/rest/api/2/search?fields=key&jql=filter=172347&maxResults=999",
+            `${jiraBaseUrl}/rest/api/2/search?fields=key&jql=filter=172346&maxResults=4999`,
             {
                 headers: {
-                    Authorization: authHeader, // Remplacez avec votre jeton ou credentials
+                    Authorization: authToken, // Utiliser le token généré
+                    Accept: "application/json", // Format de la réponse attendu
+                },
+                params: {
+                    jql: "assignee=currentUser()", // Filtrer les tickets assignés à l'utilisateur actuel
+                    maxResults: 50, // Limiter le nombre de résultats
                 },
             }
         );
 
-        // Extraction des clés Jira
-        const keys = response.data.issues.map((issue) => issue.key);
+        // Extraire les clés des tickets
+        const issueKeys = response.data.issues.map((issue) => issue.key);
 
-        console.log("Clés Jira récupérées :", keys);
-
-        // Retourner les clés
-        return keys;
+        console.log("Clés des tickets Jira :", issueKeys);
+        return issueKeys;
     } catch (error) {
-        console.error("Erreur lors de la récupération des clés Jira :", error);
-        return [];
+        // Gestion des erreurs
+        if (error.response) {
+            console.error(
+                `Erreur API Jira : ${error.response.status} - ${error.response.statusText}`
+            );
+        } else {
+            console.error("Erreur réseau ou autre :", error.message);
+        }
     }
-};
+}
 
-// Exécuter la fonction
-fetchJiraKeys();
+// Appel de la fonction
+getJiraKeys();
